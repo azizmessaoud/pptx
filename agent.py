@@ -21,8 +21,33 @@ Clinical evidence: Méta-analyse 2023 — supplémentation en D3 réduit
                    le risque de fracture de 23% chez les adultes >60 ans (n=12 000)
 """
 
+FERSANG_TRAINING_CONTEXT = """
+Rep: Ahmed Ben Ali
+Session date: 2026-04-15
+Product: Fersang (Vitamine D3)
+
+Scores:
+- Product knowledge: 78% — Satisfactory
+- Objection handling: 52% — Needs improvement
+- Closing technique: 65% — Satisfactory
+- Compliance: 90% — Strong
+
+XAI strengths:
+- Clear explanation of mechanism of action
+- Good use of clinical evidence (fracture reduction 23%)
+
+XAI weaknesses:
+- Failed to address price objection
+- Did not mention elderly dosage (2 tabs/day)
+
+Objections encountered:
+- "Vitamine D is available cheaper elsewhere" → Rep ignored → Should compare bioavailability
+- "My patients don't need supplements" → Rep agreed → Should cite deficiency prevalence data
+"""
+
 DEFAULT_CONTEXTS = {
     "fersang": FERSANG_CONTEXT,
+    "fersang_training": FERSANG_TRAINING_CONTEXT,
 }
 
 
@@ -48,12 +73,10 @@ if __name__ == "__main__":
     lang    = sys.argv[2] if len(sys.argv) > 2 else "FR"
     mode    = sys.argv[3] if len(sys.argv) > 3 else "mode2"
 
-    # 1. Try products/ folder (future RAG integration point)
     ctx_path = f"products/{product.lower()}.txt"
     if os.path.exists(ctx_path):
         context = open(ctx_path, encoding="utf-8").read()
         print(f"Context loaded from: {ctx_path}")
-    # 2. Fall back to built-in defaults
     elif product.lower() in DEFAULT_CONTEXTS:
         context = DEFAULT_CONTEXTS[product.lower()]
         print(f"Context loaded from built-in defaults")
