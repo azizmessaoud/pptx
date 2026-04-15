@@ -5,12 +5,14 @@ from mck_ppt.constants import NAVY, ACCENT_BLUE, LIGHT_BLUE
 
 COLORS = [NAVY, ACCENT_BLUE, LIGHT_BLUE]
 
+
 def _truncate_items(items: list, max_words: int = 12) -> list:
     result = []
     for item in items:
         words = str(item).split()
         result.append(" ".join(words[:max_words]) + ("…" if len(words) > max_words else ""))
     return result
+
 
 LAYOUT_MAP = {
     "bullet_2col": lambda eng, s: eng.two_column_text(s["title"], [
@@ -35,24 +37,39 @@ LAYOUT_MAP = {
         s.get("cons_title", "Contre"),
         s["cons"]
     ),
-    "key_takeaway": lambda eng, s: eng.key_takeaway(
+    "key_takeaway": lambda eng, s: eng.executive_summary(
         s["title"],
-        s.get("left_text", []),
-        s.get("takeaways", [])
+        s.get("headline", ""),
+        [(str(i+1), item, "") for i, item in enumerate(s.get("takeaways", []))]
     ),
     "three_stat": lambda eng, s: eng.three_stat(s["title"], s["stats"]),
     "timeline": lambda eng, s: eng.timeline(s["title"], s["events"]),
 }
 
+
+def _fix_toc_title(eng: MckEngine, replacement: str = "Sommaire") -> None:
+    """Replace hardcoded Chinese TOC title with a French label."""
+    toc_slide = eng.prs.slides[1]  # index 1 = TOC slide
+    for shape in toc_slide.shapes:
+        if not shape.has_text_frame:
+            continue
+        for para in shape.text_frame.paragraphs:
+            full = "".join(r.text for r in para.runs)
+            if "目录" in full:
+                for run in para.runs:
+                    run.text = run.text.replace("目录", replacement)
+
+
 def render_deck(plan: dict, output_path: str) -> str:
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    total = len(plan["slides"]) + 2  # cover + toc + slides
+    total = len(plan["slides"]) + 2  # cover + toc + content slides
     eng = MckEngine(total_slides=total)
 
     eng.cover(title=plan["title"], subtitle=plan.get("subtitle", ""))
 
     toc_items = [(str(i+1), s["title"], "") for i, s in enumerate(plan["slides"])]
     eng.toc(items=toc_items)
+    _fix_toc_title(eng)  # ← patch Chinese → Sommaire
 
     for slide in plan["slides"]:
         fn = LAYOUT_MAP.get(slide["type"])

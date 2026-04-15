@@ -18,6 +18,18 @@ def plan_slides(topic: str, context: str, mode: str = "mode2") -> dict:
         messages=[
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"Topic: {topic}\n\nContext:\n{context}"}
-        ]
+        ],
+        temperature=0.2,      # ← lower = less hallucination in JSON
+        max_tokens=4096,
     )
-    return json.loads(response.choices[0].message.content)
+
+    raw = response.choices[0].message.content
+
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        try:
+            from json_repair import repair_json
+            return json.loads(repair_json(raw))
+        except Exception:
+            raise ValueError(f"LLM returned invalid JSON:\n{raw[:500]}")

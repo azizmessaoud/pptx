@@ -4,7 +4,7 @@ Generate a TRAINING RECAP deck for a medical rep.
 Output JSON only:
 {
   "title": "string",
-  "subtitle": "string",
+  "subtitle": "string  ← short session label in selected language, e.g. FR:'Récapitulatif de session — Nom du représentant' ES:'Resumen de sesión — Nombre del representante'",
   "slides": [
     { "type": "layout_type", "title": "string", ...fields }
   ]
@@ -12,19 +12,30 @@ Output JSON only:
 
 Slides to include:
 1. cover (handled separately, skip in slides array)
-2. score_summary → type: data_table, title: "Scores de la session",
-   headers: ["Compétence", "Score", "Statut"], rows: [[str, str, str], ...]
-3. xai_breakdown → type: pros_cons, title: "Analyse XAI",
-   pros_title: "Points forts", pros: [list of strings],
-   cons_title: "Points faibles", cons: [list of strings]
-4. objection_analysis → type: vertical_steps, title: "Analyse des objections",
-   steps: [list of strings, format: "Objection → Erreur → Correction"]
-5. coaching_tips → type: numbered_list_panel, title: "Recommandations",
-   items: [max 4 short actionable strings, each under 12 words]
-6. summary → type: key_takeaway, title: "À retenir",
-   left_text: [2-3 strings summarizing session performance],
-   takeaways: [3 short next-step strings]
+2. score_summary → type: data_table,
+   title translated, headers translated: ["Compétence/Skill/Competencia/المهارة", "Score", "Statut/Status/Estado/الحالة"],
+   rows: [[str, str, str], ...]
+3. xai_breakdown → type: pros_cons,
+   title translated, pros_title translated, pros: [list of strings],
+   cons_title translated, cons: [list of strings]
+4. objection_analysis → type: vertical_steps,
+   title translated, steps: [list of strings, format: "Objection → Error → Correction" in selected language]
+5. coaching_tips → type: numbered_list_panel,
+   title translated, items: [max 4 short actionable strings, each under 6 words]
+6. summary → type: key_takeaway,
+   title translated, headline: one short sentence in selected language,
+   takeaways: [3 short next-step strings, each under 10 words]
 
 Tone: internal, direct, coaching.
-Language: French.
+
+Language: match rep profile if specified (FR, AR, EN, ES). Default: French.
+ALL field values MUST be written in the selected language. No mixing of languages.
+
+Translation reference:
+FR: "Scores de la session" | "Analyse XAI" | "Analyse des objections" | "Recommandations" | "À retenir"
+EN: "Session Scores" | "XAI Analysis" | "Objection Analysis" | "Recommendations" | "Key Takeaways"
+ES: "Puntuaciones de sesión" | "Análisis XAI" | "Análisis de objeciones" | "Recomendaciones" | "Para recordar"
+AR: "نتائج الجلسة" | "تحليل الذكاء الاصطناعي" | "تحليل الاعتراضات" | "التوصيات" | "الخلاصة"
+
+For AR: keep all steps and items under 5 words to avoid text overflow.
 Use only the context provided. Do not invent scores or data.

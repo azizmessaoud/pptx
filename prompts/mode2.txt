@@ -4,7 +4,7 @@ Generate a DOCTOR-FACING PRODUCT SHEET.
 Output JSON only:
 {
   "title": "string",
-  "subtitle": "string",
+  "subtitle": "string  ← short tagline in the selected language, e.g. FR:'Cholécalciférol — Vitamine D3 1000 UI' ES:'Colecalciferol — Vitamina D3 1000 UI'",
   "slides": [
     { "type": "layout_type", "title": "string", ...fields }
   ]
@@ -12,24 +12,40 @@ Output JSON only:
 
 Slides to include:
 1. cover (handled separately, skip in slides array)
-2. indication → type: bullet_2col, title: "Indication",
-   left_title: "Indications approuvées", left: [list of strings],
-   right_title: "Profil patient cible", right: [list of strings]
-3. mechanism → type: vertical_steps, title: "Mécanisme d'action",
-   steps: [list of strings, each one step]
-4. dosage → type: data_table, title: "Posologie",
-   headers: ["Population", "Dose", "Fréquence"], rows: [[str, str, str], ...]
-5. safety → type: pros_cons, title: "Sécurité",
-   pros_title: "Contre-indications", pros: [list of strings],
-   cons_title: "Effets indésirables", cons: [list of strings]
-6. clinical_evidence → type: numbered_list_panel, title: "Données cliniques",
-   items: [max 4 short strings, each under 12 words]
-7. key_message → type: key_takeaway, title: "Message clé",
-   left_text: [2-3 sentence strings summarizing the product],
-   takeaways: [3 short key point strings]
+2. indication → type: bullet_2col,
+   title translated to selected language,
+   left_title translated, left: [list of strings],
+   right_title translated, right: [list of strings]
+3. mechanism → type: vertical_steps,
+   title translated, steps: [list of strings, each one step, max 8 words each]
+4. dosage → type: data_table,
+   title translated, headers translated: ["Population", "Dose", "Fréquence/Frequency/التكرار/Frecuencia"],
+   rows: [[str, str, str], ...]
+5. safety → type: pros_cons,
+   title translated, pros_title translated, pros: [list of strings],
+   cons_title translated, cons: [list of strings]
+6. clinical_evidence → type: numbered_list_panel,
+   title translated, items: [max 4 short strings, each under 6 words]
+7. key_message → type: key_takeaway,
+   title translated, headline: one short sentence in selected language,
+   takeaways: [3 short key point strings, each under 10 words]
 
 Tone: scientific, professional, concise.
+
 Language: match doctor profile if specified (FR, AR, EN, ES). Default: French.
+ALL field values (title, subtitle, left_title, right_title, pros_title, cons_title,
+items, steps, rows, takeaways, headline) MUST be written in the selected language.
+No mixing of languages whatsoever.
+
+Translation reference:
+FR: "Indication" | "Mécanisme d'action" | "Posologie" | "Sécurité" | "Données cliniques" | "Message clé"
+EN: "Indication" | "Mechanism of Action" | "Dosage" | "Safety" | "Clinical Evidence" | "Key Message"
+ES: "Indicación" | "Mecanismo de acción" | "Posología" | "Seguridad" | "Evidencia clínica" | "Mensaje clave"
+AR: "الاستطباب" | "آلية العمل" | "الجرعة" | "السلامة" | "البيانات السريرية" | "الرسالة الرئيسية"
+
+For AR: keep all steps and items under 5 words to avoid text overflow.
+For ES: use formal medical Spanish (Spain/Latin America neutral).
+
 Compliance: use ONLY information from the provided context.
 Never add claims not explicitly stated in the source.
 Zero off-label claims.
