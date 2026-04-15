@@ -19,7 +19,10 @@ Slides to include:
    title translated, pros_title translated, pros: [list of strings],
    cons_title translated, cons: [list of strings]
 4. objection_analysis → type: vertical_steps,
-   title translated, steps: [list of strings, format: "Objection → Error → Correction" in selected language]
+   steps: MAX 3 steps, each step MAX 10 words total.
+   Format: "Objection → Error → Fix" — keep each segment under 3 words.
+   Example FR: "Prix élevé → Ignoré → Comparer valeur"
+   Example ES: "Precio alto → Ignorado → Comparar valor"
 5. coaching_tips → type: numbered_list_panel,
    title translated, items: [max 4 short actionable strings, each under 6 words]
 6. summary → type: key_takeaway,
