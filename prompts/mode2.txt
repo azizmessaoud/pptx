@@ -19,11 +19,14 @@ Slides to include:
    steps: [list of strings, each one step]
 4. dosage → type: data_table, title: "Posologie",
    headers: ["Population", "Dose", "Fréquence"], rows: [[str, str, str], ...]
-5. safety → type: bullet_2col, title: "Sécurité",
-   left_title: "Contre-indications", left: [list of strings],
-   right_title: "Effets indésirables", right: [list of strings]
+5. safety → type: pros_cons, title: "Sécurité",
+   pros_title: "Contre-indications", pros: [list of strings],
+   cons_title: "Effets indésirables", cons: [list of strings]
 6. clinical_evidence → type: numbered_list_panel, title: "Données cliniques",
-   items: [list of strings]
+   items: [max 4 short strings, each under 12 words]
+7. key_message → type: key_takeaway, title: "Message clé",
+   left_text: [2-3 sentence strings summarizing the product],
+   takeaways: [3 short key point strings]
 
 Tone: scientific, professional, concise.
 Language: match doctor profile if specified (FR, AR, EN, ES). Default: French.

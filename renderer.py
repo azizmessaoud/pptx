@@ -5,6 +5,13 @@ from mck_ppt.constants import NAVY, ACCENT_BLUE, LIGHT_BLUE
 
 COLORS = [NAVY, ACCENT_BLUE, LIGHT_BLUE]
 
+def _truncate_items(items: list, max_words: int = 12) -> list:
+    result = []
+    for item in items:
+        words = str(item).split()
+        result.append(" ".join(words[:max_words]) + ("…" if len(words) > max_words else ""))
+    return result
+
 LAYOUT_MAP = {
     "bullet_2col": lambda eng, s: eng.two_column_text(s["title"], [
         ("A", s.get("left_title", ""), s["left"]),
@@ -19,17 +26,33 @@ LAYOUT_MAP = {
     ]),
     "four_column": lambda eng, s: eng.four_column(s["title"], s["columns"]),
     "numbered_list_panel": lambda eng, s: eng.numbered_list_panel(s["title"], [
-        (item, "") for item in s["items"]
+        (item, "") for item in _truncate_items(s["items"])
     ]),
-    "pros_cons": lambda eng, s: eng.pros_cons(s["title"], s["pros"], s["cons"]),
+    "pros_cons": lambda eng, s: eng.pros_cons(
+        s["title"],
+        s.get("pros_title", "Pour"),
+        s["pros"],
+        s.get("cons_title", "Contre"),
+        s["cons"]
+    ),
+    "key_takeaway": lambda eng, s: eng.key_takeaway(
+        s["title"],
+        s.get("left_text", []),
+        s.get("takeaways", [])
+    ),
     "three_stat": lambda eng, s: eng.three_stat(s["title"], s["stats"]),
     "timeline": lambda eng, s: eng.timeline(s["title"], s["events"]),
 }
 
 def render_deck(plan: dict, output_path: str) -> str:
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    eng = MckEngine(total_slides=len(plan["slides"]) + 1)
+    total = len(plan["slides"]) + 2  # cover + toc + slides
+    eng = MckEngine(total_slides=total)
+
     eng.cover(title=plan["title"], subtitle=plan.get("subtitle", ""))
+
+    toc_items = [(str(i+1), s["title"], "") for i, s in enumerate(plan["slides"])]
+    eng.toc(items=toc_items)
 
     for slide in plan["slides"]:
         fn = LAYOUT_MAP.get(slide["type"])

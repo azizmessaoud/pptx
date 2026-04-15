@@ -14,13 +14,16 @@ Slides to include:
 1. cover (handled separately, skip in slides array)
 2. score_summary → type: data_table, title: "Scores de la session",
    headers: ["Compétence", "Score", "Statut"], rows: [[str, str, str], ...]
-3. xai_breakdown → type: bullet_2col, title: "Analyse XAI",
-   left_title: "Points forts", left: [list of strings],
-   right_title: "Points faibles", right: [list of strings]
+3. xai_breakdown → type: pros_cons, title: "Analyse XAI",
+   pros_title: "Points forts", pros: [list of strings],
+   cons_title: "Points faibles", cons: [list of strings]
 4. objection_analysis → type: vertical_steps, title: "Analyse des objections",
    steps: [list of strings, format: "Objection → Erreur → Correction"]
 5. coaching_tips → type: numbered_list_panel, title: "Recommandations",
-   items: [list of actionable strings]
+   items: [max 4 short actionable strings, each under 12 words]
+6. summary → type: key_takeaway, title: "À retenir",
+   left_text: [2-3 strings summarizing session performance],
+   takeaways: [3 short next-step strings]
 
 Tone: internal, direct, coaching.
 Language: French.
